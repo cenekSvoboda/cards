@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
-import { useHistory } from "react-router-dom";
 
 async function loginUser(credentials: { password: string | undefined; username: string | undefined }): Promise<any> {
     return fetch('http://localhost:8080/login', {
@@ -30,7 +29,7 @@ export default function Login(this: any, { setToken }) {
         });
         setToken(token);
         // @ts-ignore
-        //window.location = '/';
+        window.location = '/';
     };
 
 
