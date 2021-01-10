@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
 
-async function loginUser(credentials) {
+async function loginUser(credentials: { password: string | undefined; username: string | undefined }): Promise<any> {
     return fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: {
@@ -13,11 +13,12 @@ async function loginUser(credentials) {
         .then(data => data.json())
 }
 
+// @ts-ignore
 export default function Login({ setToken }) {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
+    const [username, setUserName] = React.useState<string | undefined>();
+    const [password, setPassword] = React.useState<string | undefined>();
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         const token = await loginUser({
             username,
@@ -26,7 +27,10 @@ export default function Login({ setToken }) {
         setToken(token);
     }
 
+
     return(
+        <div className="login-wrapper">
+            <h1>Please Log In</h1>
         <form onSubmit={handleSubmit}>
             <label>
                 <p>Username</p>
@@ -40,6 +44,7 @@ export default function Login({ setToken }) {
                 <button type="submit">Submit</button>
             </div>
         </form>
+        </div>
     )
 }
 
