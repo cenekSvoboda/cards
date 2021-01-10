@@ -1,23 +1,41 @@
-import React from 'react';
-import './Login.css';
+import React, { useState } from 'react';
+import '../App/App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Dashboard from '../Dashboard/Dashboard';
+import Login from '../Login/Login';
+import Preferences from '../Preferences/Preferences.js';
+import useToken from '../App/useToken';
 
-export default function Login() {
-    return(
-        <div className="login-wrapper">
-            <h1>Please Logxx In</h1>
-            <form>
-                <label>
-                    <p>Username</p>
-                    <input type="text" />
-                </label>
-                <label>
-                    <p>Password</p>
-                    <input type="password" />
-                </label>
-                <div>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
-    )
+function setToken(userToken) {
+    sessionStorage.setItem('token', JSON.stringify(userToken));
 }
+
+function getToken() {
+    const tokenString = sessionStorage.getItem('token');
+    const userToken = JSON.parse(tokenString);
+    return userToken?.token;
+}
+
+function App() {
+    const { token, setToken } = useToken();
+    if(!token) {
+        return <Login setToken={setToken} />
+    }
+    return (
+        <div className="wrapper">
+            <h1>Applicationz</h1>
+            <BrowserRouter>
+                <Switch>
+                    <Route path="/dashboard">
+                        <Dashboard />
+                    </Route>
+                    <Route path="/preferences">
+                        <Preferences />
+                    </Route>
+                </Switch>
+            </BrowserRouter>
+        </div>
+    );
+}
+
+export default App;
