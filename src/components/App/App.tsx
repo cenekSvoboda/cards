@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../Login/Login';
@@ -10,9 +10,14 @@ import useToken from './useToken';
 
 
 function App() {
-    const { token, setToken, deleteToken } = useToken();
-    if(!token) {
-        return <Login setToken={setToken} />
+    const { token, setToken } = useToken();
+    //return <Login setToken={setToken} />
+
+    var condDashboard = <></>;
+    var condPrefs = <></>;
+    if (token) {
+        condDashboard = <Dashboard />;
+        condPrefs = <Preferences />;
     }
     return (
         <BrowserRouter>
@@ -37,10 +42,10 @@ function App() {
             </Row>
                     <Switch>
                         <Route path="/dashboard">
-                            <Dashboard />
+                            {condDashboard}
                         </Route>
                         <Route path="/preferences">
-                            <Preferences />
+                            {condPrefs}
                         </Route>
                         <Route path="/login">
                             <Login  setToken={setToken}/>
