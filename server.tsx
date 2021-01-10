@@ -19,8 +19,10 @@ app.use('/resetDB', (req, res) => {
 DROP TABLE IF EXISTS contacts;
 CREATE TABLE contacts (
 	contact_id INTEGER PRIMARY KEY,
+	shorthand TEXT NOT NULL UNIQUE,
 	email TEXT NOT NULL UNIQUE,
 	password TEXT NOT NULL,
+	token TEXT,
 	name TEXT NOT NULL,
 	phone TEXT,
 	optional1 TEXT,
