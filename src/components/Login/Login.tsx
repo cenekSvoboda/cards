@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
 
-async function loginUser(credentials: { password: string | undefined; username: string | undefined }): Promise<any> {
+async function loginUser(credentials: { username: string | undefined; password: string | undefined; }): Promise<any> {
     return fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: {
