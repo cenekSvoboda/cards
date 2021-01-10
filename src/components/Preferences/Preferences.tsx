@@ -1,7 +1,11 @@
 import React from 'react';
 
-export default function Preferences() {
-    return(
-        <h2>Preferences</h2>
-    );
+class Preferences extends React.Component{
+    render() {
+        return (
+            <h2>Preferences</h2>
+        );
+    }
 }
+
+export default Preferences;

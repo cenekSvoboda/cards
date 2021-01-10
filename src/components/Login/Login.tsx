@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
+import { useHistory } from "react-router-dom";
 
 async function loginUser(credentials: { password: string | undefined; username: string | undefined }): Promise<any> {
     return fetch('http://localhost:8080/login', {
@@ -10,11 +11,14 @@ async function loginUser(credentials: { password: string | undefined; username: 
         },
         body: JSON.stringify(credentials)
     })
-        .then(data => data.json())
+        .then(data => {
+            return data.json();
+        })
 }
 
+
 // @ts-ignore
-export default function Login({ setToken }) {
+export default function Login(this: any, { setToken }) {
     const [username, setUserName] = React.useState<string | undefined>();
     const [password, setPassword] = React.useState<string | undefined>();
 
@@ -25,7 +29,9 @@ export default function Login({ setToken }) {
             password
         });
         setToken(token);
-    }
+        // @ts-ignore
+        //window.location = '/';
+    };
 
 
     return(
