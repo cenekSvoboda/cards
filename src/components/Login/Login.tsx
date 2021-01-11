@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
+import conf from '../../conf';
 
 async function loginUser(credentials: { username: string | undefined; password: string | undefined; }): Promise<any> {
-    return fetch('http://localhost:8080/login', {
+    return fetch('http://'+conf.appUrl+':8080/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
