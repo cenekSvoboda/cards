@@ -16,8 +16,7 @@ app.use('/resetDB', (req, res) => {
 
 
     let sql = `
-DROP TABLE IF EXISTS contacts;
-CREATE TABLE contacts (
+    CREATE TABLE IF NOT EXISTS contacts (
 	contact_id INTEGER PRIMARY KEY,
 	shorthand TEXT NOT NULL UNIQUE,
 	email TEXT NOT NULL UNIQUE,
@@ -28,7 +27,9 @@ CREATE TABLE contacts (
 	optional1 TEXT,
 	optional2 TEXT,
 	url TEXT
-);`;
+);
+
+`;
 
     db.all(sql, [], (err, rows) => {
         if (err) {
@@ -39,6 +40,50 @@ CREATE TABLE contacts (
         });
     });
 
+    db.close();
+
+
+    let db2 = new sqlite3.Database('./cards.db', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('Connected to the cards database.');
+    });
+    let sql2 = `
+    
+INSERT INTO contacts (
+	shorthand,
+	email,
+	password,
+	token,
+	name,
+	phone,
+	optional1,
+	optional2,
+	url
+)
+VALUES(
+'admin',
+'svobo.c@gmail.com',
+'admin',
+'',
+'Admin Adminovic',
+'666666666',
+'Hell Lane 1',
+'Hell',
+'http://ceneksvoboda.eu'
+);`;
+
+    db2.all(sql2, [], (err, rows) => {
+        if (err) {
+            throw err;
+        }
+        rows.forEach((row) => {
+            console.log(row.name);
+        });
+    });
+
+    db2.close();
     res.send("reset");
 });
 
