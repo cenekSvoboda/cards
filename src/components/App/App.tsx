@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Switch, Link, useParams} from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
@@ -80,18 +80,19 @@ function App() {
 };
 
 function BCard() {
-    let { abbrev } = (useParams() as any);
-    const fetchCard = async (abbrev:any) => {
-        const token = await getCard(
+    const [cardInfo, setCardInfo] = useState(0) as any;
+    let { abbrev } = useParams() as any;
+    useEffect(() => {
+        getCard(
             abbrev
-        );
-        console.log(token);
-        return;
+        ).then(function(a){
+            setCardInfo(JSON.stringify(a));
+        });
+    });
 
-    };
     return (
-        <div onClick={()=>fetchCard(abbrev)}>
-            <h3>ID: {abbrev}</h3>
+        <div >
+            <h3>ID: {cardInfo}</h3>
         </div>
     );
 }
