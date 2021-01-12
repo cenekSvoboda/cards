@@ -45,7 +45,7 @@ function App() {
     return (
         <BrowserRouter>
         <Container>
-            <h1>Application</h1>
+            {/*<h1>Application</h1>*/}
             <Row>
                 <Col>
                     <Link to="/">Home</Link>
@@ -71,7 +71,9 @@ function App() {
                         <Route path="/logout">
                             <Logout />
                         </Route>
-                        <Route path="/:abbrev" children={<BCard />} />
+                        <Route path="/:abbrev">
+                            <BCard />
+                        </Route>
                     </Switch>
         </Container>
         </BrowserRouter>
