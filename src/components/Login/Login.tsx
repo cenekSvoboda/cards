@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Login.css';
 import conf from '../../conf';
 
-async function loginUser(credentials: { username: string | undefined; password: string | undefined; }): Promise<any> {
+async function loginUser(credentials: { abbrev: string | undefined; password: string | undefined; }): Promise<any> {
     return fetch('http://'+conf.appUrl+':8080/login', {
         method: 'POST',
         headers: {
@@ -19,13 +19,13 @@ async function loginUser(credentials: { username: string | undefined; password: 
 
 // @ts-ignore
 export default function Login(this: any, { setToken }) {
-    const [username, setUserName] = React.useState<string | undefined>();
+    const [abbrev, setAbbrev] = React.useState<string | undefined>();
     const [password, setPassword] = React.useState<string | undefined>();
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         const token = await loginUser({
-            username,
+            abbrev,
             password
         });
         setToken(token);
@@ -40,7 +40,7 @@ export default function Login(this: any, { setToken }) {
         <form onSubmit={handleSubmit}>
             <label>
                 <p>Username</p>
-                <input type="text" onChange={e => setUserName(e.target.value)}/>
+                <input type="text" onChange={e => setAbbrev(e.target.value)}/>
             </label>
             <label>
                 <p>Password</p>

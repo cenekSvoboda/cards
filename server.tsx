@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 const Database = require('sqlite-async');
 
 
@@ -14,9 +14,13 @@ app.use('/resetDB', async (req, res) => {
     }
 
     await db.run(`
+        DROP TABLE IF EXISTS contacts;
+    `);
+
+    await db.run(`
         CREATE TABLE IF NOT EXISTS contacts (
         contact_id INTEGER PRIMARY KEY,
-        shorthand TEXT NOT NULL UNIQUE,
+        abbrev TEXT NOT NULL UNIQUE,
         email TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         token TEXT,
@@ -35,7 +39,7 @@ app.use('/resetDB', async (req, res) => {
 
     const insertString = `
     INSERT INTO contacts (
-        shorthand,
+        abbrev,
         email,
         password,
         token,
@@ -62,7 +66,7 @@ app.use('/resetDB', async (req, res) => {
     const insertString2 = `
     
     INSERT INTO contacts (
-        shorthand,
+        abbrev,
         email,
         password,
         token,
@@ -96,7 +100,6 @@ app.use('/resetDB', async (req, res) => {
     var x =
         await db.all(`SELECT * 
                          FROM contacts`);
-    console.log(x);
     res.end(`<h1>hello ${JSON.stringify(x)}</h1>`);
 
 });
@@ -108,11 +111,35 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(cors());
 
 app.use('/login', (req, res) => {
-    //console.log(req.body.username);
-    //console.log(req.body.password);
-    res.send({
-        token: 'test123'
+
+    var tok = '';
+    require('crypto').randomBytes(48, async function(err, buffer) {
+        tok = buffer.toString('hex');
+
+        try {
+            var db2 = await Database.open('./cards.db');
+        } catch (E) {
+            console.log("Cant connect");
+        }
+        var x = await db2.get(`SELECT *
+            FROM contacts WHERE abbrev = ? AND password = ?`,
+            ""+req.body.abbrev+"",""+req.body.password+"");
+        if (x) {
+            console.log("LOGIN: "+req.body.abbrev);
+            await db2.get(`UPDATE contacts SET token = ? WHERE abbrev = ? AND password = ?`,
+                tok,""+req.body.abbrev+"",""+req.body.password+"");
+            res.send({
+                token: ''+tok
+            });
+        } else {
+            res.send({
+                resp: 'login_failed'
+            });
+        }
     });
 });
 
-app.listen(8080, () => {console.log('API is running on http://localhost:8080/login');console.log('RESET DB on http://localhost:8080/resetDB')});
+app.listen(8080, () => {
+    console.log('API is running on http://localhost:8080/login');
+    console.log('RESET DB on http://localhost:8080/resetDB')
+});
