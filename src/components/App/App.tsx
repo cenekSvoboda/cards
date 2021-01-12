@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Link, useParams} from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../Login/Login';
@@ -15,9 +15,14 @@ function App() {
 
     var condDashboard = <></>;
     var condPrefs = <></>;
+    var condLogin = <></>;
     if (token) {
         condDashboard = <Dashboard />;
         condPrefs = <Preferences />;
+    } else {
+        condLogin = <Col>
+            <Link to="/login">Login</Link>
+        </Col>;
     }
     return (
         <BrowserRouter>
@@ -33,9 +38,7 @@ function App() {
                 <Col>
                     <Link to="/preferences">Preferences</Link>
                 </Col>
-                <Col>
-                    <Link to="/login">Login</Link>
-                </Col>
+                {condLogin}
                 <Col>
                     <Link to="/logout">Logout</Link>
                 </Col>
@@ -53,13 +56,21 @@ function App() {
                         <Route path="/logout">
                             <Logout />
                         </Route>
+                        <Route path="/:id" children={<Child />} />
                     </Switch>
-
-
         </Container>
         </BrowserRouter>
 
     );
 };
+
+function Child() {
+    let { id } = (useParams() as any);
+    return (
+        <div>
+            <h3>ID: {id}</h3>
+        </div>
+    );
+}
 
 export default App;
