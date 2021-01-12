@@ -4,6 +4,7 @@ import {BrowserRouter, Route, Switch, Link, useParams} from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../Login/Login';
+import CardList from '../CardList/CardList';
 import Logout from '../Logout/Logout';
 import Preferences from '../Preferences/Preferences';
 import useToken from './useToken';
@@ -56,6 +57,9 @@ function App() {
                 <Col>
                     <Link to="/preferences">Preferences</Link>
                 </Col>
+                <Col>
+                    <Link to="/list">List</Link>
+                </Col>
                 {condLogin}
             </Row>
                     <Switch>
@@ -70,6 +74,9 @@ function App() {
                         </Route>
                         <Route path="/logout">
                             <Logout />
+                        </Route>
+                        <Route path="/list">
+                            <CardList />
                         </Route>
                         <Route path="/:abbrev">
                             <BCard />
