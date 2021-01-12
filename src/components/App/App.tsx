@@ -7,6 +7,21 @@ import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
 import Preferences from '../Preferences/Preferences';
 import useToken from './useToken';
+import conf from "../../conf";
+
+
+async function getCard(abbrev: string | undefined): Promise<any> {
+    return fetch('http://'+conf.appUrl+':8080/card', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"abbrev":abbrev})
+    })
+    .then(data => {
+        return data.json();
+    })
+}
 
 
 function App() {
@@ -19,6 +34,9 @@ function App() {
     if (token) {
         condDashboard = <Dashboard />;
         condPrefs = <Preferences />;
+        condLogin = <Col>
+            <Link to="/logout">Logout</Link>
+        </Col>;
     } else {
         condLogin = <Col>
             <Link to="/login">Login</Link>
@@ -39,9 +57,6 @@ function App() {
                     <Link to="/preferences">Preferences</Link>
                 </Col>
                 {condLogin}
-                <Col>
-                    <Link to="/logout">Logout</Link>
-                </Col>
             </Row>
                     <Switch>
                         <Route path="/dashboard">
@@ -56,7 +71,7 @@ function App() {
                         <Route path="/logout">
                             <Logout />
                         </Route>
-                        <Route path="/:id" children={<Child />} />
+                        <Route path="/:abbrev" children={<BCard />} />
                     </Switch>
         </Container>
         </BrowserRouter>
@@ -64,11 +79,19 @@ function App() {
     );
 };
 
-function Child() {
-    let { id } = (useParams() as any);
+function BCard() {
+    let { abbrev } = (useParams() as any);
+    const fetchCard = async (abbrev:any) => {
+        const token = await getCard(
+            abbrev
+        );
+        console.log(token);
+        return;
+
+    };
     return (
-        <div>
-            <h3>ID: {id}</h3>
+        <div onClick={()=>fetchCard(abbrev)}>
+            <h3>ID: {abbrev}</h3>
         </div>
     );
 }

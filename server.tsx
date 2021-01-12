@@ -139,6 +139,30 @@ app.use('/login', (req, res) => {
     });
 });
 
+app.use('/card', async (req, res) => {
+
+    try {
+        var db3 = await Database.open('./cards.db');
+    } catch (E) {
+        console.log("Cant connect");
+    }
+    var x = await db3.get(`SELECT *
+            FROM contacts WHERE abbrev = ?`,
+        ""+req.body.abbrev+"");
+
+    if (x) {
+        delete x.password;
+        delete x.token;
+        res.send({
+            card: x
+        });
+    } else {
+        res.send({
+            card: 'not_found'
+        });
+    }
+});
+
 app.listen(8080, () => {
     console.log('API is running on http://localhost:8080/login');
     console.log('RESET DB on http://localhost:8080/resetDB')
